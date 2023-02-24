@@ -1,7 +1,5 @@
 package com.serenitydojo.calculator;
 
-import java.util.Arrays;
-
 public class Calculator {
     public int evaluate(String expression) throws IllegalMathsOperatorException {
         if (expression.equals("")) {
