@@ -1,36 +1,45 @@
 package com.serenitydojo.calculator;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Calculator {
     public int evaluate(String expression) throws IllegalMathsOperatorException {
         if (expression.equals("")) {
             return 0;
-        } else {
-            String[] numbers = expression.split("\\D+");
-            String[] operators = expression.split("[0-9]+");
-            int result = Integer.parseInt(numbers[0].trim());
-            for (int i = 1; i < numbers.length; i++) {
-                switch (operators[i].trim()) {
-                    case "+":
-                        result += getIntegerFromString(numbers[i]);
-                        break;
-                    case "-":
-                        result -= getIntegerFromString(numbers[i]);
-                        break;
-                    case "*":
-                        result *= getIntegerFromString(numbers[i]);
-                        break;
-                    case "/":
-                        result /= getIntegerFromString(numbers[i]);
-                        break;
-                    default:
-                        throw new IllegalMathsOperatorException(String.format("%s operator can't be used here", operators[i].trim()));
-                }
-            }
-            return result;
         }
+
+        String[] tokens = expression.split(" ");
+
+        int result = 0;
+        String operator = "+";
+
+        for (String token : tokens) {
+            if (!StringUtils.isNumeric(token)) {
+                operator = token;
+            } else {
+                result = process(result, operator, token);
+            }
+        }
+        return result;
     }
 
-    public int getIntegerFromString(String string) {
-        return Integer.parseInt(string.trim());
+    public int process(int firstOperand, String operator, String secondOperand) throws IllegalMathsOperatorException {
+        switch (operator) {
+            case "+":
+                firstOperand += Integer.parseInt(secondOperand);
+                break;
+            case "-":
+                firstOperand -= Integer.parseInt(secondOperand);
+                break;
+            case "*":
+                firstOperand *= Integer.parseInt(secondOperand);
+                break;
+            case "/":
+                firstOperand /= Integer.parseInt(secondOperand);
+                break;
+            default:
+                throw new IllegalMathsOperatorException(String.format("%s operator can't be used here", operator));
+        }
+        return firstOperand;
     }
 }
